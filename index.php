@@ -1,143 +1,82 @@
 <?php
 session_start();
-error_reporting(0);
 include('includes/config.php');
+if(isset($_POST['login']))
+{
+$uname=$_POST['username'];
+$password=md5($_POST['password']);
+$sql ="SELECT UserName,Password FROM admin WHERE UserName=:uname and Password=:password";
+$query= $dbh -> prepare($sql);
+$query-> bindParam(':uname', $uname, PDO::PARAM_STR);
+$query-> bindParam(':password', $password, PDO::PARAM_STR);
+$query-> execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+if($query->rowCount() > 0)
+{
+$_SESSION['alogin']=$_POST['username'];
+echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
+} else{
+	
+	echo "<script>alert('Invalid Details');</script>";
+
+}
+
+}
+
 ?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Avengers Tours & Hotels</title>
+<title>ATH| Admin Sign in</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-<script type="applijewelleryion/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel='stylesheet' type='text/css' />
+<!-- Custom CSS -->
 <link href="css/style.css" rel='stylesheet' type='text/css' />
-<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,600' rel='stylesheet' type='text/css'>
-<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
-<link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="css/morris.css" type="text/css"/>
+<!-- Graph CSS -->
 <link href="css/font-awesome.css" rel="stylesheet">
-<!-- Custom Theme files -->
-<script src="js/jquery-1.12.0.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<!--animate-->
-<link href="css/animate.css" rel="stylesheet" type="text/css" media="all">
-<script src="js/wow.min.js"></script>
-	<script>
-		 new WOW().init();
-	</script>
-<!--//end-animate-->
-</head>
+<link rel="stylesheet" href="css/jquery-ui.css"> 
+<!-- jQuery -->
+<script src="js/jquery-2.1.4.min.js"></script>
+<!-- //jQuery -->
+<link href='//fonts.googleapis.com/css?family=Roboto:700,500,300,100italic,100,400' rel='stylesheet' type='text/css'/>
+<link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+<!-- lined-icons -->
+<link rel="stylesheet" href="css/icon-font.min.css" type='text/css' />
+<!-- //lined-icons -->
+</head> 
 <body>
-<?php include('includes/header.php');?>
-<div class="banner">
+	<div class="main-wthree">
 	<div class="container">
-		<h1 class="wow zoomIn animated animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: zoomIn;">Avengers Tours & Hotels</h1>
-	</div>
-</div>
-
-
-
-
-
-<!---holiday---->
-<div class="container">
-	<div class="holiday">
-	
-
-
-
-	
-	<h3>Package List</h3>
-
-					
-<?php $sql = "SELECT * from tbltourpackages order by rand() limit 4";
-$query = $dbh->prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{	?>
-			<div class="rom-btm">
-				<div class="col-md-3 room-left wow fadeInLeft animated" data-wow-delay=".5s">
-					<img src="admin/pacakgeimages/<?php echo htmlentities($result->PackageImage);?>" class="img-responsive" alt="">
-				</div>
-				<div class="col-md-6 room-midle wow fadeInUp animated" data-wow-delay=".5s">
-					<h4>Package Name: <?php echo htmlentities($result->PackageName);?></h4>
-					<h6>Package Type : <?php echo htmlentities($result->PackageType);?></h6>
-					<p><b>Package Location :</b> <?php echo htmlentities($result->PackageLocation);?></p>
-					<p><b>Features</b> <?php echo htmlentities($result->PackageFetures);?></p>
-				</div>
-				<div class="col-md-3 room-right wow fadeInRight animated" data-wow-delay=".5s">
-					<h5>USD <?php echo htmlentities($result->PackagePrice);?></h5>
-					<a href="package-details.php?pkgid=<?php echo htmlentities($result->PackageId);?>" class="view">Details</a>
-				</div>
+	<div class="sin-w3-agile">
+		<h2>Sign In</h2>
+		<form  method="post">
+			<div class="username">
+				<span class="username">Username:</span>
+				<input type="text" name="username" class="name" placeholder="" required="">
 				<div class="clearfix"></div>
 			</div>
-
-<?php }} ?>
+			<div class="password-agileits">
+				<span class="username">Password:</span>
+				<input type="password" name="password" class="password" placeholder="" required="">
+				<div class="clearfix"></div>
+			</div>
 			
-		
-<div><a href="package-list.php" class="view">View More Packages</a></div>
-</div>
+			<div class="login-w3">
+					<input type="submit" class="login" name="login" value="Sign In">
+			</div>
 			<div class="clearfix"></div>
+		</form>
+				<div class="back">
+					<a href="../index.php">Back to home</a>
+				</div>
+				
 	</div>
-
-
-
-<!--- routes ---->
-<div class="routes">
-	<div class="container">
-		<div class="col-md-4 routes-left wow fadeInRight animated" data-wow-delay=".5s">
-			<div class="rou-left">
-				<a href="#"><i class="glyphicon glyphicon-list-alt"></i></a>
-			</div>
-			<div class="rou-rgt wow fadeInDown animated" data-wow-delay=".5s">
-				<h3>95000</h3>
-				<p>Enquiries</p>
-			</div>
-				<div class="clearfix"></div>
-		</div>
-		<div class="col-md-4 routes-left">
-			<div class="rou-left">
-				<a href="#"><i class="fa fa-user"></i></a>
-			</div>
-			<div class="rou-rgt">
-				<h3>1900</h3>
-				<p>Registered users</p>
-			</div>
-				<div class="clearfix"></div>
-		</div>
-		<div class="col-md-4 routes-left wow fadeInRight animated" data-wow-delay=".5s">
-			<div class="rou-left">
-				<a href="#"><i class="fa fa-ticket"></i></a>
-			</div>
-			<div class="rou-rgt">
-				<h3>90,000,000+</h3>
-				<p>Bookings</p>
-			</div>
-				<div class="clearfix"></div>
-		</div>
-		<div class="clearfix"></div>
 	</div>
-</div>
-
-
-
-
-
-
-<?php include('includes/footer.php');?>
-<!-- signup -->
-<?php include('includes/signup.php');?>			
-<!-- //signu -->
-<!-- login -->
-<?php include('includes/signin.php');?>			
-<!-- //signin -->
-<!-- write us -->
-<?php include('includes/write-us.php');?>			
-<!-- //write us -->
+	</div>
 </body>
 </html>
